@@ -11,7 +11,7 @@ permissions:
 
 env:
   IMAGE: ghcr.io/queso/formbricks-patched
-  TAG: 5.1.4-node24.22.1
+  TAG: 6.1.1-node24.22.1
   NODE_VERSION: v24.22.1
 
 jobs:
@@ -52,6 +52,8 @@ jobs:
             const z=require('zlib'); const b=Buffer.from('x'.repeat(100000));
             if (!z.brotliDecompressSync(z.brotliCompressSync(b)).equals(b)) process.exit(1);
             console.log('brotli round-trip ok')"
+          docker run --rm --entrypoint node -w /home/nextjs "$IMAGE:test" \
+            -e "require('lightningcss-linux-x64-musl'); console.log('lightningcss ok')"
           test "$(docker run --rm --entrypoint id "$IMAGE:test" -un)" = "nextjs"
 
       - name: Push
@@ -66,4 +68,4 @@ jobs:
             ${{ env.IMAGE }}:${{ env.TAG }}-${{ steps.vars.outputs.short }}
           labels: |
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
-            org.opencontainers.image.description=formbricks 5.1.4 with Node.js 24.22.1
+            org.opencontainers.image.description=formbricks 6.1.1 with Node.js 24.22.1
